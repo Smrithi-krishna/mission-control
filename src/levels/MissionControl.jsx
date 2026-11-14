@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import ResourceBar from "../components/ResourceBar";
 import Astronaut from "../components/Astronaut";
 import { createNasaImageState, fetchNasaImage } from "../api/nasaImages";
-import { DESTINATION_CHOICES } from "../ui-mocks";
+import { DESTINATION_CHOICES } from "../ui-story";
 
 const PRIMARY_RESOURCES = [
   { key: "fuel", label: "Fuel" },
