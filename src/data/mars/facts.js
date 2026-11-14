@@ -1,39 +1,44 @@
-const SOURCE = "NASA Moon Fact Sheet (NSSDCA), nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html";
+const SOURCE = "NASA Mars Fact Sheet (NSSDCA), nssdc.gsfc.nasa.gov/planetary/factsheet/marsfact.html";
 
-export const MOON_FACTS = [
+export const MARS_FACTS = [
   {
-    id: "moon-gravity",
-    text: "The Moon's surface gravity is 1.62 m/s², only about 16.5% of Earth's. You would weigh about one sixth as much there!",
+    id: "mars-gravity",
+    text: "Mars has a surface gravity of 3.73 m/s², about 38% of Earth's.",
     source: SOURCE
   },
   {
-    id: "moon-temperature",
-    text: "At the Moon's equator, temperatures swing from about 95 K to 390 K between night and day, roughly -290°F to +240°F.",
+    id: "mars-day",
+    text: "A day on Mars lasts about 24.66 hours, very close to an Earth day.",
     source: SOURCE
   },
   {
-    id: "moon-orbit",
-    text: "The Moon takes about 27.3 days to orbit the Earth once.",
+    id: "mars-year",
+    text: "A year on Mars lasts about 687 Earth days, almost twice as long as ours.",
     source: SOURCE
   },
   {
-    id: "moon-recession",
-    text: "The Moon is slowly drifting away from Earth by about 3.8 cm every year.",
+    id: "mars-atmosphere",
+    text: "About 95% of the Martian atmosphere is carbon dioxide, so humans could not breathe it.",
     source: SOURCE
   },
   {
-    id: "moon-size",
-    text: "The Moon's average radius is 1737.4 km, about 27% of Earth's radius.",
+    id: "mars-temperature",
+    text: "The average temperature on Mars is about -59°C (214 K).",
     source: SOURCE
   },
   {
-    id: "moon-atmosphere",
-    text: "The Moon has an extremely thin atmosphere, with a total mass of only about 25,000 kg. That is almost a vacuum!",
+    id: "mars-moons",
+    text: "Mars has two small moons, Phobos and Deimos. Phobos orbits Mars in only about 7.7 hours!",
     source: SOURCE
   },
   {
-    id: "moon-escape-velocity",
-    text: "To escape the Moon's gravity, a rocket needs 2.38 km/s. Escaping Earth takes 11.2 km/s.",
+    id: "mars-distance",
+    text: "Mars is between 54.6 and 401.4 million km from Earth, depending on where both planets are in their orbits.",
+    source: SOURCE
+  },
+  {
+    id: "mars-topography",
+    text: "Mars has a topographic range of about 30 km from its lowest to its highest point, bigger than Earth's 20 km.",
     source: SOURCE
   }
 ];
