@@ -1,0 +1,501 @@
+/* Shared UI + destination screen */
+
+.resource-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.resource-bar {
+  display: grid;
+  grid-template-columns: 22px 1fr;
+  gap: 4px 8px;
+  align-items: center;
+}
+
+.resource-bar__icon {
+  grid-row: 1 / span 2;
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-family: var(--font-display);
+  font-size: 0.6rem;
+  letter-spacing: 0;
+  color: var(--teal);
+}
+
+.resource-bar__meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--grey-warm);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.resource-bar__track {
+  grid-column: 2;
+  height: var(--bar-height);
+  background: rgba(154, 160, 176, 0.18);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.resource-bar__fill {
+  height: 100%;
+  background: var(--teal);
+  width: 0%;
+  transition: width 0.55s ease, background 0.3s ease;
+}
+
+.resource-bar--low .resource-bar__fill {
+  background: var(--low);
+}
+
+.resource-bar--compact {
+  grid-template-columns: 18px 1fr;
+}
+
+.resource-bar--compact .resource-bar__icon {
+  width: 18px;
+  height: 18px;
+  font-size: 0.5rem;
+}
+
+.astronaut {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.astronaut__figure {
+  width: 120px;
+  height: 140px;
+  animation: float-y 3.2s ease-in-out infinite;
+}
+
+.astronaut--sm .astronaut__figure {
+  width: 56px;
+  height: 66px;
+}
+
+.astronaut__bubble {
+  max-width: 220px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 0.85rem;
+  text-align: center;
+  color: var(--text);
+}
+
+.astronaut--worried .astronaut__figure {
+  animation-duration: 1.6s;
+}
+
+.menu-hero {
+  text-align: center;
+  padding: 24px 8px 8px;
+}
+
+.menu-hero h1 {
+  font-size: 1.6rem;
+}
+
+.star-row {
+  display: none;
+}
+
+/* Destination screen */
+.mission-control {
+  position: relative;
+  min-height: 100svh;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  color: var(--text);
+  overflow: hidden;
+}
+
+.mission-control__bg,
+.mission-control__overlay {
+  position: absolute;
+  inset: 0;
+}
+
+.mission-control__bg {
+  background-color: var(--midnight);
+  background-size: cover;
+  background-position: center;
+  filter: saturate(0.7);
+}
+
+.mission-control__overlay {
+  background: var(--overlay);
+}
+
+.mission-control__hud {
+  position: relative;
+  z-index: 2;
+  width: min(240px, calc(100% - 24px));
+  margin: 16px 0 0 16px;
+  padding: 12px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.mission-status {
+  margin: 0 0 10px;
+  font-family: var(--font-display);
+  font-size: 0.68rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--teal);
+}
+
+.mission-control__stage {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  padding: 12px 16px 8px;
+}
+
+.planet-row {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: min(920px, 100%);
+}
+
+.planet-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 220px;
+  padding: 22px 18px 18px;
+  background: rgba(11, 16, 38, 0.55);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: inherit;
+  font-family: var(--font-body);
+  font-weight: 400;
+  text-align: center;
+  cursor: pointer;
+}
+
+.planet-card:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: 2px;
+}
+
+.planet-card.is-selected {
+  border-color: var(--teal);
+}
+
+.planet-card__orb {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+}
+
+.planet-card--mars .planet-card__orb {
+  background:
+    radial-gradient(circle at 32% 28%, #d18a62 0%, var(--rust) 42%, var(--rust-deep) 100%);
+}
+
+.planet-card--moon .planet-card__orb {
+  background:
+    radial-gradient(circle at 30% 30%, #ece7dc 0%, #b7b1a6 48%, #7d7870 100%);
+}
+
+.planet-card h2 {
+  margin: 0;
+  font-size: 1.15rem;
+}
+
+.planet-card p {
+  margin: 0;
+  max-width: 240px;
+  color: var(--grey-warm);
+  font-size: 0.95rem;
+}
+
+.planet-card .btn {
+  max-width: 180px;
+  min-height: 48px;
+}
+
+.planet-card.is-selected .btn {
+  background: var(--teal);
+  border-color: var(--teal);
+  color: var(--midnight);
+}
+
+.mission-control__dock {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 16px 20px;
+}
+
+.mission-control__launch {
+  width: min(280px, 100%);
+}
+
+.bg-status {
+  position: relative;
+  z-index: 2;
+  margin: 0 16px;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+@media (min-width: 720px) {
+  .planet-row {
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  .planet-card {
+    flex: 1;
+    min-height: 280px;
+  }
+
+  .planet-card__orb {
+    width: 110px;
+    height: 110px;
+  }
+}
+
+/* Outpost screens */
+.app-shell:not(:has(.mission-control)) {
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  max-width: none;
+  min-height: 100svh;
+  overflow: hidden;
+  padding: 0 clamp(18px, 5vw, 72px) 14px;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(67, 44, 107, 0.3), transparent 48%),
+    radial-gradient(ellipse at 100% 62%, rgba(36, 79, 119, 0.18), transparent 42%),
+    #080d20;
+}
+.app-shell:has(.opening-screen) {
+  background-image:
+    linear-gradient(90deg, rgba(5, 8, 22, 0.43), rgba(5, 8, 22, 0.12) 54%, rgba(5, 8, 22, 0.28)),
+    linear-gradient(0deg, rgba(5, 8, 22, 0.58), transparent 40%),
+    url("/moonmars.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+.app-shell:not(:has(.mission-control)) > :not(.space-backdrop) { position: relative; z-index: 1; }
+.space-backdrop { position: absolute; inset: 0; overflow: hidden; pointer-events: none; opacity: .8; background-image: radial-gradient(1px 1px at 10% 16%, #e5ddff 98%, transparent), radial-gradient(1px 1px at 83% 12%, #d4f8ff 98%, transparent), radial-gradient(1.5px 1.5px at 54% 28%, #fff 98%, transparent), radial-gradient(1px 1px at 74% 53%, #d8ceff 98%, transparent), radial-gradient(1px 1px at 29% 64%, #fff 98%, transparent), radial-gradient(1px 1px at 90% 84%, #fff 98%, transparent), radial-gradient(1px 1px at 12% 76%, #d8ceff 98%, transparent); }
+.topbar { max-width:1120px; width:100%; margin:0 auto; min-height:74px; display:flex;align-items:center;gap:12px;border-bottom:1px solid rgba(199,188,228,.12); }
+.brand-mark { display:grid;place-items:center;width:38px;height:38px;border:1px solid #9f81db;border-radius:12px;color:#c8a7ff;background:#8053b51c;font-size:20px;box-shadow:0 0 22px #9673e333; }
+.eyebrow { margin:0 0 5px; color:#ab91dc;font-size:.66rem;letter-spacing:.17em;font-weight:600; }
+.topbar-title {margin:0;font-size:.94rem;font-weight:600;color:#f4f0ff;}
+.day-pill {margin-left:auto;border:1px solid #7d68aa7d;border-radius:999px;padding:9px 13px;color:#fff;background:#241b3d9c;font-size:.72rem;letter-spacing:.1em;font-weight:600;}
+.day-pill span {color:#a69ab9;font-weight:500;}
+.dashboard,.play-area { max-width:960px;width:100%;margin:25px auto 0; }
+.panel-glass { border:1px solid rgba(183,159,224,.22);border-radius:18px;background:linear-gradient(145deg,rgba(27,25,54,.91),rgba(14,20,42,.91));box-shadow:0 18px 60px #03061066,inset 0 1px #ffffff0d;backdrop-filter:blur(12px); }
+.dashboard {padding:clamp(18px,3vw,30px);}
+.dashboard-heading {display:flex;align-items:flex-start;justify-content:space-between;gap:16px;}
+.dashboard-heading h1 {margin:0 0 7px;font-family:var(--font-display);font-size:clamp(1.25rem,3vw,1.8rem);letter-spacing:.07em;line-height:1.25;color:#f5f1ff;}
+.muted {color:#a9a5bd;font-size:.9rem;margin:0;}
+.destination-switch {display:flex;gap:5px;padding:4px;border:1px solid #ffffff17;background:#090d1e8c;border-radius:12px;flex-shrink:0;}
+.destination-switch button {border:0;background:transparent;color:#b8b1ca;padding:8px 12px;border-radius:9px;font:600 .8rem var(--font-body);}
+.destination-switch button.active {background:#553f7e;color:white;box-shadow:inset 0 0 0 1px #c39cff55;}
+.dashboard-grid {display:grid;grid-template-columns:1.1fr .9fr;gap:14px;margin-top:24px;}
+.resource-panel,.weather-panel {position:relative;min-width:0;padding:17px;border:1px solid #ffffff16;border-radius:14px;background:#090e208c;}
+.panel-heading {display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:16px;}
+.panel-heading h2,.report-supplies h3,.lessons h3 {margin:0;color:#eee9ff;font:600 .79rem var(--font-body);letter-spacing:.08em;text-transform:uppercase;}
+.panel-heading>span {color:#9186aa;font-size:.62rem;letter-spacing:.12em;}
+.dashboard-resources {gap:11px;}
+.dashboard-resources>div {position:relative;}
+.dashboard-resources .resource-bar {grid-template-columns:30px 1fr;gap:4px 10px;padding-right:20px;}
+.dashboard-resources .resource-bar__icon {width:28px;height:28px;grid-row:1/span 2;border-radius:8px;color:#c8a7ff;border-color:#9c7aca50;font-size:.68rem;}
+.dashboard-resources .resource-bar__meta {font-size:.7rem;color:#dad5e9;}
+.dashboard-resources .resource-bar__track {height:9px;border:0;background:#ffffff13;border-radius:10px;}
+.dashboard-resources .resource-bar__fill {border-radius:10px;background:linear-gradient(90deg,#56d4c4,#8ee9d9);}
+.resource-bar--warning .resource-bar__fill {background:linear-gradient(90deg,#e6a23e,#f5c461);}
+.resource-bar--critical .resource-bar__fill {background:linear-gradient(90deg,#e15c68,#f27f7d);}
+.resource-bar--low .resource-bar__fill {background:var(--low);}
+.resource-tip {position:absolute;right:0;top:2px;display:grid;place-items:center;width:16px;height:16px;border:1px solid #8f82aa88;border-radius:50%;color:#b8aacd;font-size:.65rem;cursor:help;}
+.resource-tip:focus-visible,.fact-link:focus-visible,.close-button:focus-visible,button:focus-visible {outline:2px solid #d2adff;outline-offset:2px;}
+.micro-copy {display:flex;align-items:center;gap:7px;margin:15px 0 0;color:#8f89a4;font-size:.67rem;}
+.terms-help {margin:8px 0 0;color:#918ba3;font-size:.67rem;line-height:1.5;}.terms-help span {color:#c9b4e9;text-decoration:underline dotted;text-underline-offset:3px;cursor:help;}
+.dot {width:7px;height:7px;border-radius:50%;}.dot--amber {background:#f2b74c;box-shadow:0 0 8px #f2b74c99;}
+.weather-panel {display:flex;align-items:center;gap:13px;flex-wrap:wrap;}
+.weather-icon {display:grid;place-items:center;flex:0 0 48px;width:48px;height:48px;border-radius:14px;background:#e3a64919;border:1px solid #e3a64950;color:#f5bd62;font-size:1.7rem;}
+.weather-copy {flex:1;min-width:105px;}.weather-copy .eyebrow {color:#d9ac65;}.weather-copy h2 {margin:0;color:#f7dfb5;font-size:1rem;letter-spacing:.12em;}.weather-copy p:not(.eyebrow) {margin:3px 0;color:#d2c9dd;font-size:.75rem;}.weather-copy small {color:#938ca4;font-size:.67rem;}
+.weather-meter {display:flex;gap:4px;width:100%;height:5px;}.weather-meter i {flex:1;border-radius:5px;background:#ffffff17;}.weather-meter--medium i:first-child,.weather-meter--medium i:nth-child(2) {background:#e6a94c;}.weather-meter--low i:first-child {background:#80d0ae;}.weather-meter--high i {background:#e47566;}
+.source-line {display:block;width:100%;color:#8d879d;font-size:.66rem;}
+.fact-link {display:flex;align-items:center;gap:8px;width:100%;margin-top:14px;padding:12px 14px;border:1px solid #9475c447;border-radius:12px;background:#8f69c310;color:#e1d2ff;text-align:left;font:500 .8rem var(--font-body);}
+.fact-link span:first-child {color:#cba8ff;}.fact-link b {font-weight:500;color:#9c91b2;}.fact-link span:last-child {margin-left:auto;}
+.play-area {margin-top:15px;}
+.decision-card,.consequence-card,.report-card {padding:clamp(20px,4vw,34px);animation:fade-in .3s ease;}
+.section-kicker {display:flex;align-items:center;gap:9px;color:#ab91dc;font-size:.64rem;font-weight:600;letter-spacing:.15em;}
+.kicker-star {font-size:1rem;color:#e6be70;}.kicker-line {height:1px;flex:1;background:linear-gradient(90deg,#a787c755,transparent);}
+.decision-card>h2,.consequence-card h2,.report-card h2 {margin:12px 0 8px;color:#f6f2ff;font:700 clamp(1.08rem,2.6vw,1.35rem) var(--font-display);letter-spacing:.045em;line-height:1.45;}
+.scenario-story {max-width:690px;color:#bdb8cd;font-size:.92rem;line-height:1.65;margin:0;}
+.choice-prompt {margin:22px 0 10px;color:#e9e3f5;font-size:.8rem;font-weight:600;}
+.choice-list {display:grid;gap:9px;}
+.choice-button {display:flex;align-items:center;gap:14px;width:100%;min-height:68px;padding:13px 15px;border:1px solid #a78dcc35;border-radius:12px;background:linear-gradient(105deg,#65508722,#151b36a8);color:#eee9f8;text-align:left;transition:transform .16s,border-color .16s,background .16s;}
+.choice-button:hover {transform:translateY(-1px);border-color:#bd9be4a0;background:#71559135;}
+.choice-index {display:grid;place-items:center;flex:0 0 34px;height:34px;border:1px solid #a68bc644;border-radius:10px;color:#c4a5ef;font-size:.72rem;font-weight:600;}
+.choice-copy {display:grid;gap:7px;flex:1;}.choice-copy strong {font-size:.83rem;font-weight:600;}.tradeoff {display:flex;flex-wrap:wrap;gap:6px;}
+.tradeoff em {font-style:normal;font-size:.65rem;font-weight:600;border-radius:99px;padding:3px 8px;}
+.tradeoff .gain {color:#8fe1ca;background:#53c6a31b;border:1px solid #53c6a33d;}.tradeoff .cost {color:#f1bd73;background:#edab501a;border:1px solid #edab503d;}
+.choice-arrow {color:#a993c7;font-size:1.1rem;}.no-free-note {margin:13px 0 0;color:#89839a;font-size:.68rem;text-align:center;}
+.consequence-card,.report-card {max-width:680px;margin:0 auto;text-align:center;}.result-icon,.report-emblem {display:grid;place-items:center;width:48px;height:48px;margin:0 auto 12px;border-radius:16px;background:#5ac8a31c;border:1px solid #69d9b17a;color:#89e4c2;font-size:1.2rem;box-shadow:0 0 26px #5ac8a322;}
+.consequence-card .scenario-story,.report-card .scenario-story {margin:0 auto;}.result-supplies,.report-supplies,.lessons {margin:21px auto 0;padding:16px;border:1px solid #ffffff17;border-radius:12px;background:#090e208c;text-align:left;}.result-supplies>.eyebrow {margin-bottom:12px;}.primary-button {display:flex;align-items:center;justify-content:center;gap:18px;width:100%;min-height:50px;margin:18px auto 0;border:1px solid #bb9be9;border-radius:12px;background:linear-gradient(110deg,#71539a,#563d7b);color:#fff;font:600 .86rem var(--font-body);box-shadow:0 7px 25px #6c4a9a2b;}.primary-button:hover {filter:brightness(1.12);}.primary-button span {color:#e5caff;font-size:1rem;}
+.report-emblem {background:#d6a54b1c;border-color:#e5bb6980;color:#f0c773;font-size:1.3rem;}.report-emblem--failed {background:#e15c681c;border-color:#e15c687a;color:#f28e91;}.report-supplies h3,.lessons h3 {margin-bottom:14px;}.lessons ul {list-style:none;padding:0;margin:0;display:grid;gap:9px;}.lessons li {display:flex;gap:9px;color:#bbb5ca;font-size:.78rem;line-height:1.45;}.lessons li span {color:#c5a0f1;}.report-card {margin-bottom:15px;}
+.modal-backdrop {position:fixed;z-index:10;inset:0;display:grid;place-items:center;padding:20px;background:#050714c9;backdrop-filter:blur(6px);}.fact-popup {position:relative;width:min(470px,100%);padding:30px;background:linear-gradient(150deg,#282448,#111a35);box-shadow:0 24px 90px #0009;animation:fade-in .2s ease;}.fact-popup h2 {margin:5px 0 18px;font:700 1.2rem var(--font-display);letter-spacing:.06em;color:#f7f2ff;}.fact-popup p:not(.eyebrow) {color:#c6c0d2;font-size:.86rem;line-height:1.65;}.fact-popup .fact-title {font-weight:600;color:#eee4ff!important;}.fact-popup .source-line {margin-top:18px;}.close-button {position:absolute;right:14px;top:12px;border:0;background:transparent;color:#bcb3cf;font-size:1.6rem;}.fact-sparkle {display:grid;place-items:center;width:48px;height:48px;margin-bottom:16px;border-radius:15px;background:#c494f21b;color:#d7b9ff;font-size:1.5rem;}
+.fact-popup .source-line a {color:#bda0ea;text-decoration:underline;text-underline-offset:2px;}
+.app-shell:not(:has(.mission-control)) .app-footer {max-width:960px;width:100%;margin:18px auto 0;border-top:1px solid #ffffff12;padding:13px 0 3px;color:#8c859d;font-size:.64rem;letter-spacing:.08em;text-transform:none;}
+@media(max-width:640px) {
+  .app-shell:not(:has(.mission-control)) {padding:0 14px 12px;}
+  .topbar {min-height:66px;}.brand-mark {width:34px;height:34px;border-radius:11px;}.day-pill {padding:8px 10px;font-size:.64rem;}
+  .dashboard,.play-area {margin-top:15px;}.dashboard {padding:17px;border-radius:15px;}
+  .dashboard-heading {flex-direction:column;}.destination-switch {align-self:flex-start;}.dashboard-grid {grid-template-columns:1fr;margin-top:17px;gap:9px;}
+  .resource-panel,.weather-panel {padding:14px;}.weather-panel {gap:10px;}.weather-icon {width:42px;height:42px;flex-basis:42px;}
+  .decision-card,.consequence-card,.report-card {padding:20px 16px;border-radius:15px;}.choice-button {min-height:76px;padding:12px 10px;gap:10px;}.choice-index {flex-basis:29px;height:29px;}.choice-copy strong {font-size:.78rem;}.tradeoff em {font-size:.61rem;}.choice-arrow {font-size:.95rem;}
+  .fact-link {font-size:.75rem;}.app-shell:not(:has(.mission-control)) .app-footer {text-align:center;font-size:.59rem;}
+}
+@media(prefers-reduced-motion:reduce) { *,*::before,*::after {scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;} }
+
+/* Pilot setup and player astronaut */
+.opening-screen {position:relative;z-index:2;max-width:none;width:100%;min-height:calc(100svh - 74px);margin:0 auto;display:grid;grid-template-columns:minmax(290px,360px) 1fr;align-items:center;gap:18px;padding:20px clamp(18px,5vw,72px);pointer-events:none;}
+.astronaut-setup {min-width:0;padding:clamp(20px,3vw,30px);pointer-events:auto;}
+.astronaut-setup {display:flex;flex-direction:column;align-items:center;text-align:center;}
+.astronaut-setup>.eyebrow {align-self:flex-start;}
+.pilot-art-wrap {position:relative;width:min(100%,235px);height:220px;display:grid;place-items:center;margin:1px auto 2px;}
+.player-astronaut {position:relative;z-index:1;display:block;animation:pilot-float 3.4s ease-in-out infinite;}
+.player-astronaut__art {display:block;width:100%;height:100%;overflow:visible;}
+.pilot-art-wrap>.player-astronaut {width:190px;height:216px;}
+.pilot-orbit {position:absolute;left:50%;top:62%;width:97%;height:30px;border:1px solid #aa8cdd49;border-radius:50%;transform:translate(-50%,-50%) rotate(-12deg);}
+.pilot-orbit--two {width:82%;height:21px;transform:translate(-50%,-50%) rotate(13deg);border-color:#7bd9d04a;}
+@keyframes pilot-float {0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.astronaut-setup h2 {margin:0 0 18px;color:#f6f2ff;font:700 1.05rem var(--font-display);letter-spacing:.075em;}
+.name-label {align-self:flex-start;margin-bottom:7px;color:#ded7ec;font-size:.75rem;font-weight:600;}
+.name-input-row {display:flex;width:100%;gap:7px;}
+.name-input-row input {min-width:0;flex:1;height:43px;border:1px solid #a78dcc52;border-radius:10px;background:#090e20a8;padding:0 11px;color:#f4efff;font:500 .8rem var(--font-body);outline:none;}
+.name-input-row input:focus {border-color:#c19cec;box-shadow:0 0 0 3px #a67bdb25;}
+.surprise-button {flex:0 0 auto;min-height:43px;border:1px solid #9170bc68;border-radius:10px;background:#875fba20;color:#d9c6f6;padding:0 11px;font:600 .71rem var(--font-body);}
+.name-hint {align-self:flex-start;margin:6px 0 13px;color:#8d879e;font-size:.65rem;}
+.suit-picker {align-self:flex-start;width:100%;border:0;padding:0;margin:0;text-align:left;}
+.suit-picker legend {padding:0 0 8px;color:#ded7ec;font-size:.73rem;font-weight:600;}
+.color-options {display:flex;gap:11px;align-items:center;}
+.color-choice {width:26px;height:26px;border-radius:50%;border:2px solid #fff6;background:var(--swatch);box-shadow:0 0 0 2px transparent;}
+.color-choice.selected {box-shadow:0 0 0 2px #e4d4ff,0 0 15px color-mix(in srgb,var(--swatch),transparent 45%);}
+.start-mission-button {margin-top:20px;}
+.start-mission-button:disabled {opacity:.42;cursor:not-allowed;filter:grayscale(.4);}
+.planet-instruction {justify-self:center;align-self:start;margin-top:22px;padding:12px 17px;border:1px solid #c6b2e936;border-radius:13px;background:#0a0d20a6;backdrop-filter:blur(9px);text-align:center;box-shadow:0 12px 36px #02051055;}
+.planet-instruction h1 {margin:0 0 5px;color:#f5f1ff;font:700 clamp(1.1rem,2.7vw,1.65rem) var(--font-display);letter-spacing:.065em;}
+.planet-instruction p:not(.eyebrow) {margin:0;color:#c0b9cd;font-size:.78rem;}
+.planet-instruction>span {display:inline-block;margin-top:6px;color:#998eaa;font-size:.65rem;}.planet-instruction strong {color:#d9c0ff;}
+.planet-selection-backdrop {position:fixed;z-index:1;inset:0;pointer-events:none;}
+.planet-hotspots {position:absolute;inset:0;pointer-events:none;}
+.planet-hotspot {position:absolute;display:grid;place-items:center;padding:0;border:1px solid transparent;border-radius:50%;background:transparent;color:white;pointer-events:auto;cursor:pointer;transition:border-color .18s,box-shadow .18s;}
+.planet-hotspot--mars {left:45%;top:18%;width:clamp(175px,20vw,365px);aspect-ratio:1;transform:translate(-50%,-50%);}
+.planet-hotspot--moon {left:84%;top:31%;width:clamp(230px,33vw,590px);aspect-ratio:1;transform:translate(-50%,-50%);}
+.planet-hotspot>span {position:absolute;left:50%;top:100%;transform:translate(-50%,5px);padding:7px 12px;border:1px solid #c9a9f477;border-radius:999px;background:#17132de8;color:#f7efff;font-size:.75rem;font-weight:600;letter-spacing:.04em;white-space:nowrap;opacity:0;transition:opacity .16s,transform .16s;box-shadow:0 5px 20px #0007;}
+.planet-hotspot:hover,.planet-hotspot:focus-visible {border-color:#d4b1ff75;box-shadow:0 0 24px #c393ff38,inset 0 0 22px #c393ff20;}
+.planet-hotspot.is-selected {border-color:transparent;box-shadow:none;}
+.planet-hotspot:hover>span,.planet-hotspot:focus-visible>span,.planet-hotspot.is-selected>span {opacity:1;transform:translate(-50%,0);}
+.planet-hotspot:disabled {cursor:not-allowed;}
+.planet-hotspot:disabled>span {opacity:0;}
+.mission-status-pill {display:flex;align-items:center;gap:9px;margin-left:auto;letter-spacing:.02em;padding:8px 12px;}
+.mission-status-pill>span {color:#b6a4d2;font-size:.59rem;letter-spacing:.11em;}
+.mission-status-pill strong {color:#fff;font-size:.75rem;}
+.mission-status-pill small {color:#a99cbd;font-size:.58rem;letter-spacing:.08em;}
+.topbar-pilot {width:38px;height:44px;flex:none;}
+.report-pilot {display:flex;align-items:center;justify-content:center;gap:12px;margin:9px auto 0;}
+.report-pilot-art {width:62px;height:70px;flex:none;}
+.report-pilot .scenario-story {margin:0;text-align:left;}
+.report-pilot .scenario-story strong {color:#f0e7ff;}
+@media(max-width:760px) {
+  .opening-screen {grid-template-columns:minmax(0,1fr);gap:12px;min-height:calc(100svh - 66px);margin-top:0;padding:14px;align-content:start;}
+  .astronaut-setup {order:0;padding:20px;max-width:430px;width:100%;margin:0 auto;}
+  .planet-instruction {margin:8px auto 0;}
+  .planet-selection-backdrop {position:relative;inset:auto;width:calc(100% + 28px);height:56.25vw;margin:8px -14px 0;background:url("/moonmars.jpg") center/100% 100% no-repeat;pointer-events:none;}
+  .planet-hotspots {position:absolute;inset:0;}
+  .planet-hotspot--mars {left:45%;top:16%;width:22vw;min-width:90px;}
+  .planet-hotspot--moon {left:84%;top:31%;width:34vw;min-width:130px;}
+  .pilot-art-wrap {height:190px;width:210px;}.pilot-art-wrap>.player-astronaut {width:164px;height:187px;}
+  .mission-status-pill {gap:5px;padding:7px 9px;}.mission-status-pill>span {display:none;}.topbar-pilot {width:32px;height:38px;}
+}
+@media(max-width:390px) {.name-input-row{flex-direction:column;}.surprise-button{width:100%;}.report-pilot{align-items:flex-start;}}
+
+/* Two simple opening steps */
+.app-shell.intro-shell {max-width:none;width:100%;min-height:100svh;margin:0;padding:0;overflow:hidden;}
+.app-shell.astronaut-step {display:grid;place-items:center;background:#11172d;}
+.astronaut-step .astronaut-setup {width:min(420px,calc(100vw - 32px));padding:22px 26px;border:0;border-radius:0;background:transparent;box-shadow:none;backdrop-filter:none;}
+.astronaut-step .setup-title {margin:0 0 2px;color:#f5f1ff;font:700 clamp(1.5rem,4vw,2rem) var(--font-display);letter-spacing:.04em;text-align:center;text-transform:none;}
+.astronaut-step .pilot-art-wrap {height:230px;margin:0 auto 8px;}
+.astronaut-step .name-label,.astronaut-step .suit-picker legend {font-size:1rem;}
+.astronaut-step .name-input-row input {height:52px;font-size:1rem;}
+.astronaut-step .surprise-button {min-height:52px;font-size:.9rem;}
+.astronaut-step .name-hint {font-size:.8rem;}
+.astronaut-step .color-choice {width:34px;height:34px;}
+.astronaut-step .start-mission-button {min-height:58px;font-size:1.15rem;}
+.app-shell.planet-step {position:relative;display:block;isolation:isolate;max-width:none;width:100%;min-height:100svh;max-height:100svh;margin:0;padding:0;overflow:hidden;background:#070b1b;}
+.app-shell.planet-step > .planet-stage {position:absolute;z-index:0;}
+.planet-stage {position:absolute;z-index:0;left:50%;top:50%;width:min(100vw,177.78svh);aspect-ratio:16/9;transform:translate(-50%,-50%);background:url("/moonmars.jpg") center/100% 100% no-repeat;}
+.planet-heading,.planet-hint {position:absolute;z-index:3;left:50%;transform:translateX(-50%);width:max-content;max-width:calc(100% - 28px);margin:0;text-align:center;color:#fff;}
+.planet-heading {top:24px;font:700 clamp(1.35rem,3.6vw,2.25rem) var(--font-display);letter-spacing:.035em;text-transform:none;text-shadow:0 3px 15px #050713cc;}
+.app-shell.planet-step > .planet-heading {position:absolute;z-index:3;}
+.planet-hint {top:75px;color:#e2dcec;font-size:1rem;text-shadow:0 2px 10px #050713;}
+.app-shell.planet-step > .planet-hint {position:absolute;z-index:3;}
+.planet-targets {position:absolute;inset:0;z-index:2;}
+.planet-target {position:absolute;transform:translate(-50%,-50%);border-radius:50%;}
+.planet-target--mars {left:45%;top:17%;width:20%;aspect-ratio:1;}
+.planet-target--moon {left:84%;top:31%;width:35%;aspect-ratio:1;}
+.planet-target::before {content:"";position:absolute;inset:-8%;border:1px solid transparent;border-radius:50%;background:radial-gradient(circle,rgba(180,139,255,.2),rgba(180,139,255,.08) 50%,transparent 73%);box-shadow:0 0 45px 18px rgba(167,117,255,.28);opacity:0;transition:opacity .2s;pointer-events:none;}
+.planet-target.is-active::before {opacity:1;}
+.planet-hit-area {position:absolute;z-index:1;inset:-3%;width:106%;height:106%;border:0;border-radius:50%;background:transparent;cursor:pointer;}
+.planet-hit-area:focus-visible {outline:3px solid #f5d7ff;outline-offset:2px;}
+.planet-name-button {position:absolute;z-index:2;left:50%;top:69%;transform:translate(-50%,-50%);min-width:min(160px,85%);min-height:56px;padding:9px 22px;border:1px solid #f5d6ff;border-radius:15px;background:linear-gradient(140deg,#aa70e9ed,#6c4c9bf0);color:#fff;font:700 1.2rem var(--font-display);letter-spacing:.06em;box-shadow:0 0 28px #d1a1ffbd,0 8px 24px #04061699;animation:fade-in .16s ease;}
+.planet-pilot {position:absolute;z-index:4;left:clamp(12px,3vw,42px);bottom:12px;width:clamp(205px,24vw,290px);height:175px;}
+.app-shell.planet-step > .planet-pilot {position:absolute;z-index:4;}
+.planet-pilot-art {position:absolute!important;left:0;bottom:0;width:104px;height:125px;}
+.planet-speech {position:absolute;left:80px;bottom:90px;margin:0;padding:10px 14px;border:1px solid #b598dcaa;border-radius:16px 16px 16px 4px;background:#14152cd9;color:#fff;font-size:clamp(.85rem,1.2vw,1rem);font-weight:600;white-space:nowrap;box-shadow:0 5px 20px #0008;}
+.planet-choice-card {position:absolute;z-index:4;right:clamp(14px,5vw,72px);bottom:clamp(16px,4vh,48px);width:min(340px,calc(100% - 30px));padding:18px 20px;border:1px solid #c6a6e990;border-radius:18px;background:rgba(12,15,35,.88);color:#fff;text-align:center;box-shadow:0 12px 40px #0009;backdrop-filter:blur(8px);animation:fade-in .2s ease;}
+.app-shell.planet-step > .planet-choice-card {position:absolute;z-index:4;}
+.planet-choice-card p {margin:0;color:#f6efff;font-size:1.2rem;font-weight:600;}
+.planet-choice-card .primary-button {min-height:58px;font-size:1.15rem;}
+@media(max-width:700px) {
+  .astronaut-step .astronaut-setup {padding:14px 20px;}
+  .astronaut-step .pilot-art-wrap {height:205px;}
+  .planet-stage {width:100vw;top:43%;}
+  .planet-heading {top:18px;font-size:1.4rem;}
+  .planet-hint {top:61px;font-size:.9rem;}
+  .planet-target--mars {left:45%;top:17%;width:22%;}
+  .planet-target--moon {left:84%;top:31%;width:36%;}
+  .planet-pilot {left:8px;bottom:7px;width:185px;height:125px;}
+  .planet-pilot-art {width:78px;height:94px;}
+  .planet-speech {left:61px;bottom:66px;padding:8px 10px;font-size:.77rem;}
+  .planet-choice-card {right:10px;bottom:12px;width:min(230px,calc(100% - 160px));padding:13px 12px;}
+  .planet-choice-card p {font-size:.95rem;}
+  .planet-choice-card .primary-button {min-height:48px;font-size:1rem;}
+}
