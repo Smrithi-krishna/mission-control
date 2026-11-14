@@ -1,4 +1,8 @@
 function FactPopup({ fact, onClose }) {
+  function FactPopup({ fact, onClose }) {
+  if (!fact) return null;
+
+  
   return (
     <div className="modal-backdrop" role="presentation" onClick={onClose}>
       <section className="fact-popup panel-glass" role="dialog" aria-modal="true" aria-labelledby="fact-title" onClick={(event) => event.stopPropagation()}>
