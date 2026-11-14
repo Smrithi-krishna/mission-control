@@ -1,4 +1,4 @@
-import { INITIAL_RESOURCES } from "../data/common/resources";
+import { INITIAL_RESOURCES } from "../data/common/resources.js";
 
 export const createInitialGameState = () => ({
   destination: null,

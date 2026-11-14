@@ -11,13 +11,13 @@ const BADGES = {
 
 function ResourceBar({ label, icon, value = 0, resourceKey, compact = false }) {
   const safeValue = Math.max(0, Math.min(100, Number(value) || 0));
-  const isLow = safeValue < 25;
+  const level = safeValue < 20 ? "critical" : safeValue < 40 ? "warning" : "";
   const displayIcon = icon || BADGES[resourceKey] || (label ? label[0] : "R");
   const displayLabel = label || resourceKey || "Resource";
 
   return (
     <div
-      className={`resource-bar${isLow ? " resource-bar--low" : ""}${compact ? " resource-bar--compact" : ""}`}
+      className={`resource-bar${level ? ` resource-bar--${level}` : ""}${compact ? " resource-bar--compact" : ""}`}
       role="img"
       aria-label={`${displayLabel}: ${Math.round(safeValue)} percent`}
     >

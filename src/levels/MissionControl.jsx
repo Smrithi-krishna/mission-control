@@ -66,7 +66,7 @@ function MissionControl({ gameState, onChoice, onNext }) {
 
       <div className="mission-control__inner">
       <aside className="mission-control__hud">
-        <p className="mission-status">Mission Status</p>
+        <p className="mission-status">Space Trip</p>
         <div className="resource-list">
           {PRIMARY_RESOURCES.map((item) => (
             <ResourceBar
@@ -116,6 +116,7 @@ function MissionControl({ gameState, onChoice, onNext }) {
             Continue
           </button>
         ) : null}
+      </div>
       </div>
     </section>
   );

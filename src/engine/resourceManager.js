@@ -1,4 +1,4 @@
-import { RESOURCE_NAMES } from "../data/common/resources";
+import { RESOURCE_NAMES } from "../data/common/resources.js";
 
 const MIN_VALUE = 0;
 const MAX_VALUE = 100;
