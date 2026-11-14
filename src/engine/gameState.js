@@ -5,6 +5,7 @@ export const createInitialGameState = () => ({
   currentLevel: "mission-control",
   resources: { ...INITIAL_RESOURCES },
   discoveries: [],
+  history: [],
   score: 0,
   completed: false
 });
