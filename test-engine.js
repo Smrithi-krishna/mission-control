@@ -2,6 +2,7 @@ import { createInitialGameState } from "./src/engine/gameState.js";
 import { makeDecision } from "./src/engine/decisionEngine.js";
 import { exampleScenario } from "./src/data/common/scenarioTemplate.js";
 import { getRandomFact, markFactSeen } from "./src/engine/factManager.js";
+import { calculateFinalScore, finishMission } from "./src/engine/scoring.js";
 
 const state = createInitialGameState();
 const result = makeDecision(state, exampleScenario, "activate-shield");
@@ -17,3 +18,21 @@ for (let i = 0; i < 9; i++) {
   console.log("Fact", i + 1, ":", fact ? `${fact.title}: ${fact.body}` : "No new facts left");
   if (fact) factState = markFactSeen(factState, fact.id);
 }
+
+// Good mission: healthy resources, 2 discoveries, 3 facts
+const goodState = {
+  ...createInitialGameState(),
+  resources: { fuel: 80, oxygen: 90, food: 70, power: 85, morale: 75 },
+  discoveries: ["rock-sample", "ice-found"],
+  factsSeen: ["moon-gravity", "moon-orbit", "moon-size"]
+};
+console.log("Good mission:", calculateFinalScore(goodState));
+
+// Failed mission: oxygen ran out
+const badState = {
+  ...createInitialGameState(),
+  resources: { fuel: 80, oxygen: 0, food: 70, power: 85, morale: 75 },
+  factsSeen: ["moon-gravity"]
+};
+console.log("Failed mission:", calculateFinalScore(badState));
+console.log("Finished state:", finishMission(goodState).outcome);
