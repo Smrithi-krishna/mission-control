@@ -9,9 +9,7 @@ export const exampleScenario = {
       effect: {
         fuel: -10,
         oxygen: 0,
-        food: 0,
         power: -5,
-        morale: 5
       },
       feedback: "The crew is protected, but power is consumed."
     },
@@ -21,9 +19,7 @@ export const exampleScenario = {
       effect: {
         fuel: 0,
         oxygen: -10,
-        food: 0,
         power: 0,
-        morale: -10
       },
       feedback: "The crew faces increased radiation risk."
     }

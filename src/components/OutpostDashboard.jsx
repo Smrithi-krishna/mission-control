@@ -1,11 +1,6 @@
 import ResourceBar from "./ResourceBar";
 import { SPACE_WEATHER } from "../ui-mocks";
-
-const RESOURCES = [
-  { key: "power", label: "Power", icon: "ϟ", tip: "Power runs lights, heaters, and machines." },
-  { key: "oxygen", label: "Oxygen", icon: "O₂", tip: "Oxygen is the air people need to breathe." },
-  { key: "shielding", label: "Shielding", icon: "⬡", tip: "Shielding is a protective layer that helps block radiation." }
-];
+import { RESOURCE_DEFINITIONS } from "../data/common/resources";
 
 function OutpostDashboard({ resources, day, destination, onDestination, onFact }) {
   return (
@@ -24,7 +19,7 @@ function OutpostDashboard({ resources, day, destination, onDestination, onFact }
         <section className="resource-panel">
           <div className="panel-heading"><h2>Your supplies</h2><span>DAY {day} OF 10</span></div>
           <div className="resource-list dashboard-resources">
-            {RESOURCES.map((item) => <div key={item.key} title={item.tip}><ResourceBar resourceKey={item.key} label={item.label} icon={item.icon} value={resources[item.key]} /><span className="resource-tip" tabIndex="0" aria-label={item.tip}>?</span></div>)}
+            {RESOURCE_DEFINITIONS.map((item) => <div key={item.key} title={item.tip}><ResourceBar resourceKey={item.key} label={item.label} icon={item.icon} value={resources[item.key]} /><span className="resource-tip" tabIndex="0" aria-label={item.tip}>?</span></div>)}
           </div>
           <p className="micro-copy"><span className="dot dot--amber" /> Bars turn amber below 40% and red below 20%.</p>
           <p className="terms-help"><span tabIndex="0" title="Radiation is energy from the Sun and space that can harm people." aria-label="Radiation: energy from the Sun and space that can harm people">Radiation</span> is energy from space. <span tabIndex="0" title="Shielding is a protective layer that blocks some radiation." aria-label="Shielding: a protective layer that blocks some radiation">Shielding</span> helps block it.</p>

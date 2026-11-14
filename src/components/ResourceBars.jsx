@@ -1,25 +1,18 @@
 import ResourceBar from "./ResourceBar.jsx";
-import { RESOURCE_NAMES } from "../data/common/resources.js";
-
-const LABELS = {
-  fuel: "Fuel",
-  oxygen: "Oxygen",
-  food: "Food",
-  power: "Power",
-  morale: "Morale"
-};
+import { RESOURCE_DEFINITIONS } from "../data/common/resources.js";
 
 function ResourceBars({ resources, compact = false }) {
   if (!resources) return null;
 
   return (
     <div className="resource-bars">
-      {RESOURCE_NAMES.map((name) => (
+      {RESOURCE_DEFINITIONS.map(({ key, label, icon }) => (
         <ResourceBar
-          key={name}
-          resourceKey={name}
-          label={LABELS[name] ?? name}
-          value={resources[name]}
+          key={key}
+          resourceKey={key}
+          label={label}
+          icon={icon}
+          value={resources[key]}
           compact={compact}
         />
       ))}

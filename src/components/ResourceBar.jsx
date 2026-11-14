@@ -4,8 +4,6 @@
 const BADGES = {
   fuel: "F",
   oxygen: "O",
-  morale: "M",
-  food: "E",
   power: "P"
 };
 

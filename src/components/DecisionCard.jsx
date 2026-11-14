@@ -1,5 +1,5 @@
-const NAMES = { fuel: "Fuel", oxygen: "Oxygen", food: "Food", power: "Power", morale: "Morale" };
-const ICONS = { fuel: "⛽", oxygen: "◌", food: "🍎", power: "⚡", morale: "😊" };
+const NAMES = { fuel: "Fuel", oxygen: "Oxygen", power: "Power" };
+const ICONS = { fuel: "⛽", oxygen: "◌", power: "⚡" };
 
 function DecisionCard({ scenario, onChoose }) {
   return (

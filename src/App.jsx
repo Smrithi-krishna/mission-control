@@ -1,6 +1,12 @@
 import { useEffect, useRef, useState } from "react";
-import { INITIAL_OUTPOST, JOURNEY_EVENT_CHOICES } from "./ui-mocks";
-import { FACTS, OUTPOST_STORY } from "./ui-story";
+import { JOURNEY_EVENT_CHOICES } from "./ui-mocks";
+import { FACTS } from "./ui-story";
+import { getScenariosFor } from "./engine/scenarioManager";
+import { createInitialGameState } from "./engine/gameState";
+import { makeDecision } from "./engine/decisionEngine";
+import { toCardScenario } from "./engine/scenarioAdapter";
+import { calculateFinalScore } from "./engine/scoring";
+import { RESOURCE_DEFINITIONS, clampResource } from "./data/common/resources";
 import { getDefaultSoundSettings, playAlert, playBloop, playClick, playDing, playWin, resumeSound, setSoundSettings as applySoundSettings, startAmbient, testSound } from "./audio/sound";
 import OutpostDashboard from "./components/OutpostDashboard";
 import AstronautSetup, { SUIT_COLORS } from "./components/AstronautSetup";
@@ -15,18 +21,13 @@ import HowToPlay from "./components/HowToPlay";
 import StoryIntro from "./components/StoryIntro";
 import JourneyScreen from "./components/JourneyScreen";
 import Scoreboard from "./components/Scoreboard";
-import { calculateMockScore } from "./ui-mocks";
 import { isAllowedNickname } from "./api/nickname";
 import { getTopScores, saveScore } from "./api/scoreboard";
 import { readJournal, saveJournalFactIds } from "./api/spaceJournal";
 import DataSources from "./components/DataSources";
 
 const PILOT_NAMES = ["Nova", "Star Pilot", "Captain Zen", "Luna", "Orbit"];
-const RESOURCE_DETAILS = {
-  power: { label: "Power", icon: "⚡" },
-  oxygen: { label: "Oxygen", icon: "◌" },
-  shielding: { label: "Shielding", icon: "⬡" }
-};
+const RESOURCE_DETAILS = Object.fromEntries(RESOURCE_DEFINITIONS.map((item) => [item.key, item]));
 
 function readPilotSettings() {
   try {
@@ -68,9 +69,11 @@ function App() {
   const [journeyEvents, setJourneyEvents] = useState([]);
   const [journeyIndex, setJourneyIndex] = useState(0);
   const [journeyPhase, setJourneyPhase] = useState("alert");
-  const [resources, setResources] = useState(INITIAL_OUTPOST);
+  const [resources, setResources] = useState(() => createInitialGameState().resources);
   const [day, setDay] = useState(1);
   const [scenarioIndex, setScenarioIndex] = useState(0);
+  const [decisionScore, setDecisionScore] = useState(0);
+  const [discoveries, setDiscoveries] = useState([]);
   const [result, setResult] = useState(null);
   const [feedback, setFeedback] = useState([]);
   const [activeFact, setActiveFact] = useState(null);
@@ -135,8 +138,9 @@ function App() {
     if (screen !== "game" || !report || finishProcessed.current) return;
     finishProcessed.current = true;
     const daysSurvived = survived ? 10 : day;
-    const score = calculateMockScore(daysSurvived, resources);
-    const stars = Object.values(resources).filter((value) => value >= 40).length;
+    const scoreResult = calculateFinalScore({ resources, score: decisionScore, discoveries, factsSeen: journalIds });
+    const score = scoreResult.total;
+    const stars = scoreResult.stars;
     (async () => {
       const before = await getTopScores(20);
       const previousBest = before.filter((item) => item.name.toLocaleLowerCase() === pilotName.toLocaleLowerCase() && item.planet === destination).reduce((best, item) => Math.max(best, item.score), 0);
@@ -149,7 +153,7 @@ function App() {
       setNewRecord(placedTopThree);
       if (placedTopThree && !survived) playWin();
     })();
-  }, [screen, report, survived, day, resources, pilotName, destination, suitColor]);
+  }, [screen, report, survived, day, resources, pilotName, destination, suitColor, decisionScore, discoveries, journalIds]);
 
   const clickSound = (event) => {
     if (event.target.closest("button")) playClick();
@@ -214,13 +218,13 @@ function App() {
     else setStoryIndex((index) => index + 1);
   };
   const chooseJourney = (choice, eventId) => {
-    const next = Object.fromEntries(Object.entries(resources).map(([key, value]) => [key, Math.max(0, Math.min(100, value + (choice.change[key] || 0)))]));
+    const next = Object.fromEntries(Object.entries(resources).map(([key, value]) => [key, clampResource(value + (choice.change[key] || 0))]));
     const amounts = Object.entries(choice.change).filter(([, amount]) => amount !== 0);
     if (amounts.some(([, amount]) => amount > 0)) playDing();
     if (amounts.some(([, amount]) => amount < 0)) playBloop();
     setResources(next);
     setJourneyPhase("fly");
-    setFeedback(amounts.map(([key, amount]) => ({ key, amount, type: amount > 0 ? "gain" : "cost", ...({ power: { label: "Power", icon: "⚡" }, oxygen: { label: "Oxygen", icon: "◌" }, shielding: { label: "Shielding", icon: "⬡" } })[key] })));
+    setFeedback(amounts.map(([key, amount]) => ({ key, amount, type: amount > 0 ? "gain" : "cost", ...RESOURCE_DETAILS[key] })).filter((item) => item.label));
     setResult({ choice, scenario: { title: eventId, story: "The rocket is moving again." } });
     showNextFact();
   };
@@ -232,9 +236,10 @@ function App() {
     }
   };
   const choose = (choice) => {
-    const next = Object.fromEntries(
-      Object.entries(resources).map(([key, value]) => [key, Math.max(0, Math.min(100, value + (choice.change[key] || 0)))])
-    );
+    const scenario = getScenariosFor(destination?.toLowerCase())[scenarioIndex];
+    const cardScenario = toCardScenario(scenario);
+    const decision = makeDecision({ resources, score: decisionScore, history: [] }, scenario, choice.id);
+    const next = decision.newState.resources;
     const changes = Object.entries(choice.change).map(([key, amount]) => ({
       key,
       type: amount >= 0 ? "gain" : "cost",
@@ -244,8 +249,10 @@ function App() {
     if (changes.some((item) => item.type === "gain")) playDing();
     if (changes.some((item) => item.type === "cost")) playBloop();
     setResources(next);
+    setDecisionScore(decision.newState.score);
+    if (["moon-rock-samples", "mars-water-ice"].includes(scenario.id)) setDiscoveries((items) => items.includes(scenario.id) ? items : [...items, scenario.id]);
     setFeedback(changes);
-    setResult({ choice, scenario: OUTPOST_STORY[scenarioIndex] });
+    setResult({ choice: { ...choice, outcome: decision.feedback }, scenario: cardScenario });
   };
   const continueMission = () => {
     setResult(null);
@@ -255,14 +262,17 @@ function App() {
       showNextFact();
       return;
     }
-    setScenarioIndex((index) => (index + 1) % OUTPOST_STORY.length);
+    const scenarios = getScenariosFor(destination?.toLowerCase());
+    setScenarioIndex((index) => (index + 1) % scenarios.length);
     setDay((value) => value + 1);
     showNextFact();
   };
   const resetGame = () => {
-    setResources(INITIAL_OUTPOST);
+    setResources(createInitialGameState().resources);
     setDay(1);
     setScenarioIndex(0);
+    setDecisionScore(0);
+    setDiscoveries([]);
     setResult(null);
     setFeedback([]);
     setReport(false);
@@ -290,6 +300,9 @@ function App() {
   const soundBanner = audioBlocked && <div className="sound-unlock-banner" role="status"><span>Sound is waiting for you.</span><button type="button" onClick={async () => { const ready = await resumeSound(() => setAudioBlocked(true)); setAudioBlocked(!ready); }}>Tap to turn on sound</button></div>;
   const footer = <footer className="app-footer game-footer">Images and audio: NASA. Not endorsed by NASA.</footer>;
   const planetTheme = destination ? `game-shell--${destination.toLowerCase()}` : "";
+  const activeScenario = getScenariosFor(destination?.toLowerCase())[scenarioIndex];
+  const activeCardScenario = toCardScenario(activeScenario);
+  const missionStage = destination === "Moon" ? (day >= 10 ? "Lunar South Pole Base" : day > 1 ? "Lunar Exploration" : "Moon Arrival") : (day >= 10 ? "Mars Base" : day > 1 ? "Mars Exploration" : "Mars Arrival");
   const commonScreenProps = { onClickCapture: clickSound };
 
   if (screen === "name") {
@@ -365,10 +378,10 @@ function App() {
     <main className={`app-shell game-shell ${planetTheme}`} {...commonScreenProps}>
       <div className="space-backdrop" aria-hidden="true" />
       {controls}{soundBanner}
-      <header className="topbar"><div className="brand-mark" aria-hidden="true">✦</div><div><p className="eyebrow">SPACE TRIP</p><p className="topbar-title">Home: {destination}</p></div><PlayerAstronaut suitColor={suitColor} mood={Object.values(resources).some((value) => value < 40) ? "worried" : "happy"} className="topbar-pilot"/><div className="day-pill mission-status-pill"><strong>{pilotName}</strong><small>DAY {day} OF 10</small></div></header>
+      <header className="topbar"><div className="brand-mark" aria-hidden="true">✦</div><div><p className="eyebrow">SPACE TRIP</p><p className="topbar-title">{missionStage}</p></div><PlayerAstronaut suitColor={suitColor} mood={Object.values(resources).some((value) => value < 40) ? "worried" : "happy"} className="topbar-pilot"/><div className="day-pill mission-status-pill"><strong>{pilotName}</strong><small>DAY {day} OF 10</small></div></header>
       {!report && <OutpostDashboard resources={resources} day={day} destination={destination} onDestination={setDestination} onFact={showNextFact} />}
       <section className="play-area" aria-live="polite">
-        {report ? <MissionReport resources={resources} survived={survived} pilotName={pilotName} suitColor={suitColor} worried={!survived} score={latestScore?.score} bestScore={personalBest} stars={latestScore?.stars} newRecord={newRecord} onScoreboard={() => openScoreboard("game")} onRestart={resetGame} /> : result ? <ConsequenceMessage result={result} resources={resources} feedback={feedback} onContinue={continueMission} /> : <DecisionCard scenario={OUTPOST_STORY[scenarioIndex]} onChoose={choose} />}
+        {report ? <MissionReport resources={resources} discoveries={discoveries} survived={survived} pilotName={pilotName} suitColor={suitColor} worried={!survived} score={latestScore?.score} bestScore={personalBest} stars={latestScore?.stars} newRecord={newRecord} onScoreboard={() => openScoreboard("game")} onRestart={resetGame} /> : result ? <ConsequenceMessage result={result} resources={resources} feedback={feedback} onContinue={continueMission} /> : <DecisionCard scenario={activeCardScenario} onChoose={choose} />}
       </section>
       {footer}
       {helpDrawer}{soundPanel}{activeFact && <FactPopup fact={activeFact} name={pilotName} suitColor={suitColor} onClose={() => setActiveFact(null)} onNextFact={showNextFact}/>}

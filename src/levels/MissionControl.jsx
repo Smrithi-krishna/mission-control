@@ -7,7 +7,7 @@ import { DESTINATION_CHOICES } from "../ui-story";
 const PRIMARY_RESOURCES = [
   { key: "fuel", label: "Fuel" },
   { key: "oxygen", label: "Oxygen" },
-  { key: "morale", label: "Morale" }
+  { key: "power", label: "Power" }
 ];
 
 // Plain-word planet cards for this screen (no emoji headings).

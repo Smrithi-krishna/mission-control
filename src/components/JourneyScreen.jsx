@@ -2,10 +2,7 @@ import ResourceBar from "./ResourceBar";
 import PlayerAstronaut from "./PlayerAstronaut";
 import { FACTS, JOURNEY_EVENT_STORY } from "../ui-story";
 import { JOURNEY_EVENT_CHOICES } from "../ui-mocks";
-
-const RESOURCE_META = {
-  power: ["Power", "ϟ"], oxygen: ["Oxygen", "O₂"], shielding: ["Shielding", "⬡"]
-};
+import { RESOURCE_DEFINITIONS } from "../data/common/resources";
 
 function Planet({ destination }) {
   const isMoon = destination === "Moon";
@@ -50,13 +47,13 @@ function JourneyScreen({ destination, name, color, resources, eventId, phase, in
   const eventFact = event ? FACTS.find((item) => item.id === event.factId) : null;
   const options = eventId ? JOURNEY_EVENT_CHOICES[eventId] : [];
   return <main className={`app-shell game-shell journey-screen game-shell--${destination.toLowerCase()}`}>
-    <header className="journey-hud"><span className="day-pill">DAY 1 OF 10</span><div className="journey-meters">{Object.entries(RESOURCE_META).map(([key, [label, icon]]) => <ResourceBar key={key} label={label} icon={icon} resourceKey={key} value={resources[key]} compact/>)}</div></header>
+    <header className="journey-hud"><span className="day-pill">DAY 1 OF 10</span><div className="journey-meters">{RESOURCE_DEFINITIONS.map(({ key, label, icon }) => <ResourceBar key={key} label={label} icon={icon} resourceKey={key} value={resources[key]} compact/>)}</div></header>
     <JourneyMap destination={destination} progress={progress} name={name} color={color} eventId={eventId}/>
     {phase === "landing" ? <section className="journey-card journey-landing" aria-live="polite"><div className="journey-landing-art">✦</div><h1>We made it to {destination}!</h1><PlayerAstronaut suitColor={color} mood="happy"/><button type="button" className="primary-button" onClick={onEnter}>Enter your space home <span>→</span></button></section> : <section className="journey-card" aria-live="polite">
       <p className="eyebrow">JOURNEY STOP {index + 1} OF {total}</p>
       {phase === "alert" && <><h1>{event.title}</h1><p>{event.alert}</p><EventPicture eventId={eventId}/><span className="journey-warning">⚠ Gentle alert</span><button type="button" className="primary-button" onClick={onNext}>See what it is <span>→</span></button></>}
       {phase === "explain" && <><h1>What is this?</h1><EventPicture eventId={eventId}/><p>{event.explain[0]} {event.explain[1]}</p>{eventFact && <div className="journey-fact"><p>Did you know? {eventFact.text}</p><a className="journey-source" href={eventFact.sourceUrl} target="_blank" rel="noopener noreferrer">Source: {eventFact.sourceName}</a></div>}<div className="journey-actions"><button type="button" className="primary-button" onClick={onNext}>Choose what to do</button>{index > 0 && <button type="button" className="journey-skip" onClick={onSkipExplain}>Skip this card</button>}</div></>}
-      {phase === "choice" && <><h1>{event.title}</h1><p>What should {name} do?</p><div className="journey-choices">{options.map((choice) => <button type="button" className="journey-choice" key={choice.id} onClick={() => onChoose(choice, eventId)}><strong>{choice.label}</strong><span>{Object.entries(choice.change).map(([key, amount]) => <i key={key} className={amount > 0 ? "is-gain" : "is-cost"}>{amount > 0 ? "↑" : "↓"} {RESOURCE_META[key][0]} {Math.abs(amount)}</i>)}</span></button>)}</div></>}
+      {phase === "choice" && <><h1>{event.title}</h1><p>What should {name} do?</p><div className="journey-choices">{options.map((choice) => <button type="button" className="journey-choice" key={choice.id} onClick={() => onChoose(choice, eventId)}><strong>{choice.label}</strong><span>{Object.entries(choice.change).map(([key, amount]) => <i key={key} className={amount > 0 ? "is-gain" : "is-cost"}>{amount > 0 ? "↑" : "↓"} {RESOURCE_DEFINITIONS.find((item) => item.key === key)?.label || key} {Math.abs(amount)}</i>)}</span></button>)}</div></>}
       {phase === "fly" && <><h1>Nice work, {name}!</h1><p>The rocket is moving on. Your supplies changed, so keep an eye on the meters.</p><PlayerAstronaut suitColor={color} mood={Object.values(resources).some((value) => value < 40) ? "worried" : "happy"}/><button type="button" className="primary-button" onClick={onFlyOn}>Fly on <span>→</span></button></>}
     </section>}
   </main>;

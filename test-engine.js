@@ -23,7 +23,7 @@ for (let i = 0; i < 9; i++) {
 // Good mission: healthy resources, 2 discoveries, 3 facts
 const goodState = {
   ...createInitialGameState(),
-  resources: { fuel: 80, oxygen: 90, food: 70, power: 85, morale: 75 },
+  resources: { fuel: 80, oxygen: 90, power: 85 },
   discoveries: ["rock-sample", "ice-found"],
   factsSeen: ["moon-gravity", "moon-orbit", "moon-size"]
 };
@@ -32,7 +32,7 @@ console.log("Good mission:", calculateFinalScore(goodState));
 // Failed mission: oxygen ran out
 const badState = {
   ...createInitialGameState(),
-  resources: { fuel: 80, oxygen: 0, food: 70, power: 85, morale: 75 },
+  resources: { fuel: 80, oxygen: 0, power: 85 },
   factsSeen: ["moon-gravity"]
 };
 console.log("Failed mission:", calculateFinalScore(badState));
