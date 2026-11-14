@@ -14,6 +14,6 @@ let factState = { ...createInitialGameState(), destination: "moon" };
 
 for (let i = 0; i < 9; i++) {
   const fact = getRandomFact(factState.destination, factState.factsSeen ?? []);
-  console.log("Fact", i + 1, ":", fact ? fact.text : "No new facts left");
+  console.log("Fact", i + 1, ":", fact ? `${fact.title}: ${fact.body}` : "No new facts left");
   if (fact) factState = markFactSeen(factState, fact.id);
 }
