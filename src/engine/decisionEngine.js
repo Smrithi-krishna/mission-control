@@ -41,9 +41,10 @@ export const makeDecision = (state, scenario, choiceId) => {
     depletedResources: getDepletedResources(resources)
   };
 };
-import { createInitialGameState } from "./gameState";
+import { createInitialGameState } from "./gameState";//temp testing
 import { exampleScenario } from "../data/common/scenarioTemplate";
 
 const result = makeDecision(createInitialGameState(), exampleScenario, "activate-shield");
-console.log(result);
-// Expected: fuel 90, power 95, morale 100 (clamped), feedback text shown
+console.log(result);//temp testing
+
+
