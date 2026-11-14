@@ -1,0 +1,211 @@
+/* Dark mission theme — kids 7–12, not babyish */
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Orbitron:wght@500;700&display=swap");
+
+:root {
+  --midnight: #0b1026;
+  --midnight-soft: #151b36;
+  --grey: #9aa0b0;
+  --grey-warm: #c4bdb3;
+  --grey-muted: #6e7384;
+  --rust: #b85c38;
+  --rust-deep: #8a4328;
+  --teal: #4fd1c5;
+  --text: #e8e6e1;
+  --text-muted: #9aa0b0;
+  --border: rgba(196, 189, 179, 0.28);
+  --panel: rgba(11, 16, 38, 0.82);
+  --overlay: rgba(11, 16, 38, 0.72);
+  --low: #c45c4a;
+  --font-display: "Orbitron", "Segoe UI", sans-serif;
+  --font-body: "IBM Plex Sans", "Segoe UI", sans-serif;
+  --radius: 12px;
+  --bar-height: 8px;
+
+  /* Keep older class names working after the restyle */
+  --navy: var(--midnight);
+  --coral: var(--low);
+  --white: var(--midnight-soft);
+  --cream: var(--text);
+  --peach: var(--rust);
+  --mint: var(--teal);
+  --pink: var(--grey-warm);
+  --lavender-pale: var(--midnight-soft);
+  --shadow: none;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--text);
+  background: var(--midnight);
+  line-height: 1.45;
+}
+
+#root {
+  width: 100%;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  margin: 0 0 0.4em;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+p {
+  margin: 0 0 0.75em;
+}
+
+button {
+  font-family: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+.app-shell {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 16px 16px 12px;
+  min-height: 100svh;
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.app-shell:has(.mission-control) {
+  max-width: none;
+  padding: 0;
+}
+
+.app-footer {
+  margin-top: auto;
+  padding: 10px 8px;
+  text-align: center;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.app-shell:has(.mission-control) .app-footer {
+  position: relative;
+  z-index: 3;
+  margin-top: 0;
+  padding: 8px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  width: 100%;
+  padding: 12px 18px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 1rem;
+  background: var(--midnight-soft);
+  color: var(--text);
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-peach,
+.btn-navy {
+  background: var(--rust);
+  border-color: var(--rust);
+  color: var(--text);
+}
+
+.btn-mint,
+.btn-pink {
+  background: transparent;
+  border-color: var(--teal);
+  color: var(--teal);
+}
+
+.screen {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  animation: fade-in 0.4s ease;
+}
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+}
+
+.screen-title {
+  font-size: 1.35rem;
+  text-align: center;
+}
+
+.screen-subtitle {
+  text-align: center;
+  color: var(--text-muted);
+  margin-top: -8px;
+  letter-spacing: 0;
+  text-transform: none;
+  font-family: var(--font-body);
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes float-y {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+@media (min-width: 640px) {
+  .app-shell:not(:has(.mission-control)) {
+    padding: 24px;
+  }
+}

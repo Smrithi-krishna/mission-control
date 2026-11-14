@@ -1,122 +1,117 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import './App.css'
+import { useState } from "react";
+import { createInitialGameState } from "./engine/gameState";
+import MissionControl from "./levels/MissionControl";
+import Astronaut from "./components/Astronaut";
 
-function App() {
-  const [count, setCount] = useState(0)
+// Screen ids: menu → missionControl → journey → moon | mars → report
+const SCREENS = {
+  menu: "menu",
+  missionControl: "missionControl",
+  journey: "journey",
+  moon: "moon",
+  mars: "mars",
+  report: "report"
+};
 
+function MenuScreen({ onStart }) {
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
-
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+    <section className="screen">
+      <div className="menu-hero">
+        <p className="star-row" aria-hidden="true">
+          ✦ ✧ ✦
+        </p>
+        <h1>Mission Control</h1>
+        <p className="screen-subtitle">A cozy space adventure for NASA Space Apps 2026.</p>
+      </div>
+      <Astronaut mood="happy" message="Hi! Want to fly today?" />
+      <button type="button" className="btn btn-peach" onClick={onStart}>
+        Start mission
+      </button>
+    </section>
+  );
 }
 
-export default App
+function PlaceholderScreen({ title, note, onBack }) {
+  return (
+    <section className="screen">
+      <h1 className="screen-title">{title}</h1>
+      <p className="panel">{note}</p>
+      <button type="button" className="btn btn-mint" onClick={onBack}>
+        Back to Mission Control
+      </button>
+    </section>
+  );
+}
+
+function App() {
+  const [screen, setScreen] = useState(SCREENS.menu);
+  const [gameState, setGameState] = useState(createInitialGameState);
+
+  const startMission = () => {
+    setGameState(createInitialGameState());
+    setScreen(SCREENS.missionControl);
+  };
+
+  // Mission Control currently only records Moon vs Mars.
+  const handleChoice = (choiceId) => {
+    setGameState((prev) => ({
+      ...prev,
+      destination: choiceId,
+      currentLevel: "mission-control"
+    }));
+  };
+
+  const handleNext = () => {
+    setScreen(SCREENS.journey);
+  };
+
+  return (
+    <div className="app-shell">
+      {screen === SCREENS.menu && <MenuScreen onStart={startMission} />}
+
+      {screen === SCREENS.missionControl && (
+        <MissionControl
+          gameState={gameState}
+          onChoice={handleChoice}
+          onNext={handleNext}
+        />
+      )}
+
+      {screen === SCREENS.journey && (
+        <PlaceholderScreen
+          title="Space Journey"
+          note="Coming next: the rocket trip screen."
+          onBack={() => setScreen(SCREENS.missionControl)}
+        />
+      )}
+
+      {screen === SCREENS.moon && (
+        <PlaceholderScreen
+          title="Moon"
+          note="Coming next: moon exploration."
+          onBack={() => setScreen(SCREENS.missionControl)}
+        />
+      )}
+
+      {screen === SCREENS.mars && (
+        <PlaceholderScreen
+          title="Mars"
+          note="Coming next: mars exploration."
+          onBack={() => setScreen(SCREENS.missionControl)}
+        />
+      )}
+
+      {screen === SCREENS.report && (
+        <PlaceholderScreen
+          title="Mission Report"
+          note="Coming next: stars, score, and play again."
+          onBack={() => setScreen(SCREENS.menu)}
+        />
+      )}
+
+      <footer className="app-footer">Images: NASA</footer>
+    </div>
+  );
+}
+
+export default App;
