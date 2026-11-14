@@ -3,6 +3,7 @@ import { makeDecision } from "./src/engine/decisionEngine.js";
 import { exampleScenario } from "./src/data/common/scenarioTemplate.js";
 import { getRandomFact, markFactSeen } from "./src/engine/factManager.js";
 import { calculateFinalScore, finishMission } from "./src/engine/scoring.js";
+import { getNextScenario } from "./src/engine/scenarioManager.js";
 
 const state = createInitialGameState();
 const result = makeDecision(state, exampleScenario, "activate-shield");
@@ -36,3 +37,17 @@ const badState = {
 };
 console.log("Failed mission:", calculateFinalScore(badState));
 console.log("Finished state:", finishMission(goodState).outcome);
+
+let playState = { ...createInitialGameState(), destination: "moon" };
+
+for (let i = 0; i < 4; i++) {
+  const scenario = getNextScenario(playState);
+  if (!scenario) {
+    console.log("Round", i + 1, ": no scenarios left, level complete!");
+    break;
+  }
+  const res = makeDecision(playState, scenario, scenario.choices[0].id);
+  playState = res.newState;
+  console.log("Round", i + 1, ":", scenario.question);
+  console.log("  ", res.feedback, "score:", playState.score);
+}
