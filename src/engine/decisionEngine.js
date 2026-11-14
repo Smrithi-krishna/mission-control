@@ -2,7 +2,7 @@ import {
   applyEffects,
   isResourceDepleted,
   getDepletedResources
-} from "./resourceManager";
+} from "./resourceManager.js";
 
 // Called when the player picks a choice.
 // Takes the current game state, the scenario, and the id of the chosen choice.
