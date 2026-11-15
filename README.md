@@ -1,6 +1,6 @@
  <img src="Cosmic Commit.jpeg" alt="Banner" />
 
-🚀 Mission Control
+# Mission Control
 
 Your Mission. Your Choices. Your Survival.
 
